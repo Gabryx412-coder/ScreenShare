@@ -1,0 +1,24 @@
+name: ScreenShare
+version: '${project.version}'
+main: com.gabry.screenshare.ScreenShare
+api-version: 1.21
+authors: [Gabry]
+description: A plugin to manage screenshare sessions across BungeeCord/Velocity networks.
+commands:
+  ss:
+    description: Teleports a player to the screenshare server.
+    usage: /ss <player>
+    permission: screenshare.use
+    permission-message: You don't have permission to use this command.
+  ssend:
+    description: Teleports a player back to their original server.
+    usage: /ssend <player>
+    permission: screenshare.end
+    permission-message: You don't have permission to use this command.
+permissions:
+  screenshare.use:
+    description: Allows usage of the /ss command.
+    default: op
+  screenshare.end:
+    description: Allows usage of the /ssend command.
+    default: op

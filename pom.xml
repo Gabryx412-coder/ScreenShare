@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gabry.screenshare</groupId>
+    <artifactId>ScreenShare</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>ScreenShare</name>
+
+    <properties>
+        <java.version>17</java.version> <!-- Mantenuto Java 17, compatibile con 1.21.4 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- Aggiornato a una versione più recente -->
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.2</version> <!-- AGGIORNATO: Versione compatibile con JDK moderni -->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <excludes>
+                                    <!-- Escludiamo dipendenze che sono già fornite dal server Paper -->
+                                    <exclude>org.bukkit:*</exclude>
+                                    <exclude>io.netty:*</exclude>
+                                    <exclude>org.yaml.snakeyaml:*</exclude>
+                                    <exclude>com.google.guava:guava</exclude> <!-- Specifica solo l'artefatto, non la versione -->
+                                    <exclude>com.google.code.gson:*</exclude>
+                                    <exclude>org.json:*</exclude>
+                                    <exclude>org.apache.commons:*</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <!-- Relocazione di Guava per evitare conflitti con la versione di BungeeCord/Velocity -->
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>com.gabry.screenshare.libs.guava</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <!-- Aggiungi questa configurazione per risolvere potenziali problemi di sicurezza o di firma del JAR -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.4-R0.1-SNAPSHOT</version> <!-- Versione di Paper API -->
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
